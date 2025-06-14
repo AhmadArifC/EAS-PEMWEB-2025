@@ -17,4 +17,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/products', function () {
+    return view('products.index');
+})->name('products.index');
+
+Route::get('/categories', function () {
+    return view('categories.index');
+})->name('categories.index');
+
+Route::get('/users', function () {
+    return view('users.index');
+})->name('users.index');
+
+Route::get('/calculator', function () {
+    return view('calculator.index');
+})->name('calculator.index');
+
+Route::get('/perhitungan', function () {
+    return view('perhitungan');
+})->name('perhitungan');
+
 require __DIR__.'/auth.php';
