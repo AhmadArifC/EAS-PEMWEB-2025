@@ -1,48 +1,63 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CalculatorrController;
+use App\Models\Product;
+use App\Http\Controllers\Auth\PasswordController;
+use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    return view('welcome');
+// Halaman publik
+Route::get('/', function (Request $request) {
+    $query = \App\Models\Product::with('category');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhereHas('category', function ($q2) use ($search) {
+                  $q2->where('name', 'like', "%{$search}%");
+              });
+        });
+    }
+
+    $products = $query->paginate(12);
+    return view('welcome', compact('products'));
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// Routes untuk user yang sudah login & terverifikasi
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+         ->name('dashboard');
+
+    // CRUD Produk
+    Route::resource('products', ProductController::class);
+
+    // CRUD Kategori
+    Route::resource('categories', CategoryController::class);
+
+    // CRUD Users (index, create, store, edit, update, destroy)
+    Route::resource('users', UserController::class)->except(['show']);
+
+    // Kalkulator setelah login
+    Route::get('/calculator', [CalculatorrController::class, 'index'])->name('calculator.index');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])
+         ->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])
+         ->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+         ->name('profile.destroy');
+
+    Route::put('/profile/password', [PasswordController::class, 'update'])
+        ->name('user-password.update');
 });
-
-Route::get('/products', function () {
-    return view('products.index');
-})->name('products.index');
-
-Route::get('/categories', function () {
-    return view('categories.index');
-})->name('categories.index');
-
-Route::get('/users', function () {
-    return view('users.index');
-})->name('users.index');
-
-Route::get('/users/create', function () {
-    return view('users.create');
-})->name('users.create');
-
-Route::get('/users/edit', function () {
-    return view('users.edit');
-})->name('users.edit');
-
-Route::get('/calculator', function () {
-    return view('calculator.index');
-})->name('calculator.index');
-
-Route::get('/perhitungan', function () {
-    return view('perhitungan');
-})->name('perhitungan');
 
 require __DIR__.'/auth.php';
