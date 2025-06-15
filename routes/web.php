@@ -29,6 +29,14 @@ Route::get('/users', function () {
     return view('users.index');
 })->name('users.index');
 
+Route::get('/users/create', function () {
+    return view('users.create');
+})->name('users.create');
+
+Route::get('/users/edit', function () {
+    return view('users.edit');
+})->name('users.edit');
+
 Route::get('/calculator', function () {
     return view('calculator.index');
 })->name('calculator.index');
