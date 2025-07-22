@@ -27,8 +27,9 @@ Route::get('/', function (Request $request) {
 
     $products = $query->paginate(12);
     return view('welcome', compact('products'));
-});
+})->name('welcome');
 
+Route::get('/calculator', [CalculatorrController::class, 'index'])->name('calculator.index');
 
 // Routes untuk user yang sudah login & terverifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -46,7 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class)->except(['show']);
 
     // Kalkulator setelah login
-    Route::get('/calculator', [CalculatorrController::class, 'index'])->name('calculator.index');
+
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])

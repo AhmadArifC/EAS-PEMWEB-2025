@@ -21,7 +21,15 @@
                     class="w-10 h-10 rounded-full shadow-sm">
                 <span class="ml-3 text-2xl font-extrabold text-indigo-600">Suryana Project</span>
             </div>
+            {{-- Ini adalah div yang berisi tombol di sisi kanan header --}}
             <div class="flex items-center space-x-3">
+                {{-- Tombol Kalkulator Produk --}}
+                {{-- Sesuaikan href dengan route ke halaman kalkulator Anda --}}
+                <a href="{{ route('calculator.index') }}" {{-- Ganti 'kalkulator.produk' dengan nama route Anda --}}
+                    class="border border-indigo-600 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition">
+                    Kalkulator Produk
+                </a>
+
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}"
@@ -52,6 +60,7 @@
                 class="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition">
                 <i class="fas fa-search"></i> Cari
             </button>
+
         </form>
 
         {{-- PRODUCT GRID --}}

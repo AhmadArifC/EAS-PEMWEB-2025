@@ -7,7 +7,8 @@
     <title>@yield('title', config('app.name', 'Suryana Project'))</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -20,9 +21,16 @@
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                @if (Route::has('login'))
+                    @auth
+                        <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
                 </li>
+                    @else
+                        
+                    @endauth
+                @endif
+
             </ul>
 
             @auth
@@ -50,74 +58,96 @@
         </nav>
 
         <!-- Sidebar -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="{{ route('dashboard') }}" class="brand-link">
+        @if (Route::has('login'))
+            @auth
+                <aside class="main-sidebar sidebar-dark-primary elevation-4">
+                <a href="{{ route('dashboard') }}" class="brand-link">
+                    <span class="brand-text font-weight-light">SURYANA PROJECT</span>
+                </a>
+                <div class="sidebar">
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                            <li class="nav-item">
+                                <a href="{{ route('dashboard') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    <p>Dashboard</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('products.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-box"></i>
+                                    <p>Products</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('categories.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-tags"></i>
+                                    <p>Categories</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('users.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>Users</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('calculator.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-calculator"></i>
+                                    <p>Kalkulator</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </aside>
+        @else
+            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="{{ route('welcome') }}" class="brand-link">
                 <span class="brand-text font-weight-light">SURYANA PROJECT</span>
             </a>
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('products.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-box"></i>
-                                <p>Products</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('categories.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-tags"></i>
-                                <p>Categories</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('users.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>Users</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('calculator.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-calculator"></i>
-                                <p>Kalkulator</p>
+                            <a href="{{ route('welcome') }}" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>Home</p>
                             </a>
                         </li>
                     </ul>
                 </nav>
             </div>
-        </aside>
+            </aside>
+            @endauth @endif
+
 
         <!-- Content Wrapper -->
         <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">@yield('header')</h1>
-                        </div>
-                    </div>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">@yield('header')</h1>
                 </div>
             </div>
-
-            <section class="content">
-                <div class="container-fluid">
-                    @yield('content')
-                </div>
-            </section>
         </div>
+    </div>
 
-        <!-- Footer -->
-        <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 1.0
-            </div>
-            <strong>&copy; {{ date('Y') }} Suryana Project.</strong>
-        </footer>
+    <section class="content">
+        <div class="container-fluid">
+            @yield('content')
+        </div>
+    </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 1.0
+        </div>
+        <strong>&copy; {{ date('Y') }} Suryana Project.</strong>
+    </footer>
     </div>
 
     <!-- Scripts -->
@@ -151,6 +181,6 @@
         });
     </script>
     @stack('scripts')
-</body>
+    </body>
 
 </html>
